@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Course Lab — Test Before You Build</title>
+  <meta name="description" content="We test course ideas in public so you don't have to gamble with yours. Run a free Lab Test on your course idea." />
+  <meta property="og:title" content="The Course Lab" />
+  <meta property="og:description" content="We test course ideas in public so you don't have to gamble with yours." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Tokens ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #FAF7F2;
+      --cream-dark:  #F3EEE6;
+      --charcoal:    #1A1A1A;
+      --charcoal-2:  #2A2A2A;
+      --rust:        #B8541E;
+      --rust-dark:   #A34A18;
+      --hairline:    rgba(26,26,26,0.1);
+      --hairline-30: rgba(26,26,26,0.3);
+      --serif:       'Source Serif 4', Georgia, serif;
+      --mono:        'JetBrains Mono', 'Courier New', monospace;
+      --max-w:       1280px;
+      --max-prose:   1100px;
+      --gutter:      96px;
+      --section-gap: 120px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Utilities ──────────────────────────────────────────── */
+    .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .mono-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      display: block;
+      margin-bottom: 20px;
+    }
+    .hairline { border: none; border-top: 1px solid var(--hairline); }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+    .container-prose {
+      max-width: var(--max-prose);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    /* ─── Buttons ────────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-block;
+      background: var(--rust);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 200ms cubic-bezier(0.16,1,0.3,1), transform 120ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-primary:hover { background: var(--rust-dark); }
+    .btn-primary:active { transform: translateY(-1px); }
+    .btn-primary:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+
+    .btn-ghost {
+      display: inline-block;
+      background: transparent;
+      color: var(--charcoal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 11px 24px;
+      border-radius: 4px;
+      border: 1px solid var(--charcoal);
+      cursor: pointer;
+      transition: background 200ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-ghost:hover { background: var(--cream-dark); }
+    .btn-ghost:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+
+    .link-tertiary {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 200ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .link-tertiary:hover { color: var(--rust); }
+
+    /* ─── Section spacing ────────────────────────────────────── */
+    section { padding: var(--section-gap) 0; }
+
+    /* ─── TOP BAR ────────────────────────────────────────────── */
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream);
+      border-bottom: 1px solid var(--hairline);
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+    #topbar .container {
+      width: 100%;
+      max-width: var(--max-w);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .wordmark {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .wordmark sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      vertical-align: baseline;
+    }
+    .topbar-nav {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .topbar-nav a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      text-decoration: none;
+      transition: color 200ms;
+    }
+    .topbar-nav a:hover { color: var(--charcoal); }
+
+    /* ─── SECTION 1 — HERO ───────────────────────────────────── */
+    #hero {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      padding-top: calc(56px + 60px);
+      padding-bottom: 80px;
+    }
+    #hero .container {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      margin-bottom: 24px;
+      max-width: 22ch;
+    }
+    .hero-subhead {
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--charcoal-2);
+      max-width: 60ch;
+      margin-bottom: 36px;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .hero-ctas .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hero-footnote {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      color: var(--charcoal-2);
+    }
+
+    /* Lab Report panel */
+    .lab-panel {
+      background: var(--cream);
+      border: 1px solid var(--hairline-30);
+      position: relative;
+      padding: 32px;
+      /* dotted grid background */
+      background-image: radial-gradient(circle, rgba(26,26,26,0.07) 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+    .lab-panel-inner {
+      background: var(--cream);
+      padding: 28px;
+      background-image: none;
+    }
+    .lab-panel-header {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .lab-panel-title {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--charcoal);
+      margin-bottom: 24px;
+    }
+    .lab-data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .lab-data-row:first-child { border-top: 1px solid var(--hairline); }
+    .lab-data-label {
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--charcoal-2);
+    }
+    .lab-data-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--charcoal);
+      letter-spacing: 0.04em;
+    }
+    .verdict-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 6px 12px;
+      border: 1px solid var(--rust);
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+    .verdict-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--rust);
+      animation: pulse-dot 4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .lab-panel-footer {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.07em;
+      color: rgba(26,26,26,0.4);
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    /* ─── SECTION 2 — PROBLEM ────────────────────────────────── */
+    #problem .prose-block {
+      max-width: 720px;
+    }
+    #problem .serif-para {
+      font-size: 20px;
+      line-height: 1.65;
+      color: var(--charcoal);
+      margin-bottom: 36px;
+    }
+    .data-fragment {
+      display: inline-block;
+      border: 1px solid var(--hairline-30);
+      padding: 16px 20px;
+    }
+    .data-fragment p {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      color: var(--charcoal-2);
+      line-height: 1.8;
+    }
+    .data-fragment .data-number {
+      font-family: var(--mono);
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      color: var(--rust);
+      display: block;
+      margin-top: 8px;
+    }
+
+    /* ─── SECTION 3 — METHOD ─────────────────────────────────── */
+    #method .serif-intro {
+      font-size: 19px;
+      line-height: 1.65;
+      max-width: 65ch;
+      margin-bottom: 56px;
+    }
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      position: relative;
+    }
+    .method-grid::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rust);
+      z-index: 2;
+    }
+    .method-col {
+      padding: 0 48px 0 0;
+    }
+    .method-col + .method-col {
+      padding: 0 0 0 48px;
+      border-left: 1px solid var(--hairline-30);
+    }
+    .method-col-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .input-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .input-item-key {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 4px;
+    }
+    .input-item-value {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-style: italic;
+      color: var(--charcoal);
+      line-height: 1.45;
+    }
+    .output-table { width: 100%; }
+    .output-row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .output-row:first-child { border-top: none; }
+    .output-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--charcoal-2);
+      padding-top: 2px;
+    }
+    .output-title {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 2px;
+    }
+    .output-desc {
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--charcoal-2);
+      line-height: 1.4;
+    }
+
+    /* ─── SECTION 4 — LAB REPORT EXCERPT ────────────────────── */
+    #excerpt .serif-intro {
+      font-size: 19px;
+      line-height: 1.65;
+      max-width: 65ch;
+      margin-bottom: 48px;
+    }
+    .report-page {
+      max-width: var(--max-prose);
+      margin: 0 auto;
+      border: 1px solid var(--hairline-30);
+      padding: 56px 64px;
+      background: var(--cream);
+    }
+    .report-header-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--hairline-30);
+      margin-bottom: 32px;
+    }
+    .report-header-strip span {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+    }
+    .report-title {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--charcoal);
+      margin-bottom: 32px;
+      max-width: 55ch;
+    }
+    .report-verdict {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-style: italic;
+      color: var(--rust);
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+    }
+    .report-data-table { width: 100%; margin-bottom: 40px; }
+    .report-data-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .report-data-row.header-row {
+      border-bottom: 1px solid var(--hairline-30);
+    }
+    .report-data-row.header-row span {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+    }
+    .report-data-row .metric {
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--charcoal);
+    }
+    .report-data-row .value {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--charcoal);
+      text-align: right;
+    }
+    .report-data-row .note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--charcoal-2);
+      text-align: right;
+    }
+    .report-lab-notes {
+      padding: 24px 0;
+      border-top: 1px solid var(--hairline);
+      margin-bottom: 32px;
+    }
+    .report-lab-notes-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 14px;
+    }
+    .report-lab-notes p {
+      font-family: var(--serif);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--charcoal-2);
+      max-width: 70ch;
+    }
+    .report-footer {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.07em;
+      color: rgba(26,26,26,0.45);
+    }
+    .report-footer a {
+      color: rgba(26,26,26,0.45);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ─── SECTION 5 — DELIVERABLES ───────────────────────────── */
+    #deliverables .serif-intro {
+      font-size: 19px;
+      line-height: 1.65;
+      max-width: 65ch;
+      margin-bottom: 40px;
+    }
+    .deliverables-list { border-top: 1px solid var(--hairline-30); }
+    .deliverable-row {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 32px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .deliverable-num {
+      font-family: var(--mono);
+      font-size: 22px;
+      color: var(--charcoal-2);
+      letter-spacing: -0.01em;
+    }
+    .deliverable-title {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 3px;
+    }
+    .deliverable-desc {
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--charcoal-2);
+    }
+    .deliverable-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      border: 1px solid var(--rust);
+      border-radius: 2px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+
+    /* ─── SECTION 6 — PRICING ────────────────────────────────── */
+    #pricing .serif-intro {
+      font-size: 19px;
+      line-height: 1.65;
+      max-width: 65ch;
+      margin-bottom: 48px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .pricing-col {
+      padding: 0 40px 40px 0;
+    }
+    .pricing-col + .pricing-col {
+      padding: 0 40px 40px 40px;
+      border-left: 1px solid var(--hairline-30);
+    }
+    .pricing-col:last-child {
+      padding: 0 0 40px 40px;
+    }
+    .pricing-tier-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 10px;
+    }
+    .pricing-name {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .pricing-price {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+    .pricing-price sub {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+      vertical-align: baseline;
+    }
+    .pricing-features {
+      list-style: none;
+      border-top: 1px solid var(--hairline);
+      margin-bottom: 32px;
+    }
+    .pricing-features li {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--charcoal-2);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--hairline);
+      line-height: 1.5;
+    }
+    .pricing-note {
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      color: var(--charcoal-2);
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    /* ─── SECTION 7 — WHO IT'S FOR ───────────────────────────── */
+    #who .grid-halves {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    #who .half {
+      padding: 0 48px 0 0;
+    }
+    #who .half + .half {
+      padding: 0 0 0 48px;
+      border-left: 1px solid var(--hairline-30);
+    }
+    #who .half-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    #who .audience-item {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--charcoal);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--hairline);
+      line-height: 1.5;
+    }
+    #who .audience-item:last-child { border-bottom: none; }
+
+    /* ─── SECTION 8 — FOUNDER ────────────────────────────────── */
+    #founder .founder-aside {
+      max-width: 65ch;
+    }
+    #founder .founder-para {
+      font-size: 19px;
+      line-height: 1.7;
+      color: var(--charcoal);
+    }
+    #founder .founder-sig {
+      font-style: italic;
+      color: var(--charcoal-2);
+    }
+
+    /* ─── SECTION 9 — FINAL CTA ──────────────────────────────── */
+    #final-cta {
+      padding: var(--section-gap) 0;
+    }
+    #final-cta .cta-line {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      margin-bottom: 36px;
+      max-width: 22ch;
+    }
+    #final-cta .cta-footnote {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      color: var(--charcoal-2);
+      margin-top: 16px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    #footer {
+      border-top: 1px solid var(--hairline-30);
+      padding: 56px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-col-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--charcoal-2);
+      text-decoration: none;
+      transition: color 200ms;
+    }
+    .footer-links a:hover { color: var(--charcoal); }
+    .footer-links .soon {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal-2);
+      opacity: 0.5;
+      margin-left: 8px;
+    }
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.07em;
+      color: rgba(26,26,26,0.6);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      :root {
+        --gutter: 48px;
+        --section-gap: 96px;
+      }
+      #hero .container { gap: 48px; }
+      .hero-headline { font-size: 44px; }
+      .method-grid { gap: 0; }
+    }
+
+    @media (max-width: 767px) {
+      :root {
+        --gutter: 24px;
+        --section-gap: 80px;
+      }
+
+      /* Topbar */
+      .topbar-nav { display: none; }
+
+      /* Hero */
+      #hero { min-height: 100dvh; padding-top: calc(56px + 40px); }
+      #hero .container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .hero-headline { font-size: 36px; }
+      .hero-subhead { font-size: 17px; }
+
+      /* Method */
+      .method-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .method-grid::after { display: none; }
+      .method-col { padding: 0; }
+      .method-col + .method-col {
+        padding: 0;
+        border-left: none;
+        border-top: 1px solid var(--hairline-30);
+        padding-top: 32px;
+      }
+
+      /* Report excerpt */
+      .report-page { padding: 32px 24px; }
+      .report-data-row {
+        grid-template-columns: 1fr auto;
+      }
+      .report-data-row .note { display: none; }
+      .report-header-strip { flex-direction: column; gap: 4px; }
+
+      /* Pricing */
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        border-top: 1px solid var(--hairline-30);
+      }
+      .pricing-col {
+        padding: 32px 0;
+        border-bottom: 1px solid var(--hairline);
+      }
+      .pricing-col + .pricing-col {
+        padding: 32px 0;
+        border-left: none;
+      }
+      .pricing-col:last-child { padding: 32px 0; }
+
+      /* Who */
+      #who .grid-halves { grid-template-columns: 1fr; gap: 40px; }
+      #who .half { padding: 0; }
+      #who .half + .half {
+        padding: 0;
+        border-left: none;
+        border-top: 1px solid var(--hairline-30);
+        padding-top: 32px;
+      }
+
+      /* Deliverable rows */
+      .deliverable-row {
+        grid-template-columns: 40px 1fr;
+        gap: 16px;
+      }
+      .deliverable-tag { display: none; }
+
+      /* Final CTA */
+      #final-cta .cta-line { font-size: 32px; }
+
+      /* Footer */
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── TOP BAR ──────────────────────────────────────────────── -->
+  <header id="topbar" role="banner">
+    <div class="container">
+      <a href="/" class="wordmark" aria-label="The Course Lab home">
+        The Course Lab
+        <sub>Est. 2026 &middot; Singapore</sub>
+      </a>
+      <nav aria-label="Primary navigation">
+        <ul class="topbar-nav">
+          <li><a href="/lab-reports">Lab Reports</a></li>
+          <li><a href="/methodology">Methodology</a></li>
+        </ul>
+      </nav>
+      <a href="/lab-test" class="btn-primary">Run a free Lab Test &rarr;</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ─── SECTION 1 — HERO ──────────────────────────────────── -->
+    <section id="hero" aria-labelledby="hero-headline">
+      <div class="container">
+
+        <!-- Left: text -->
+        <div class="hero-text">
+          <span class="eyebrow">Lab Note &middot; 2026-04-25</span>
+          <h1 class="hero-headline" id="hero-headline">
+            We test course ideas in public so you don&rsquo;t have to gamble with yours.
+          </h1>
+          <p class="hero-subhead">
+            Most first-time creators spend 3 months building courses that don&rsquo;t sell. We pre-test course demand using a documented methodology, and publish every experiment &mdash; so you can see what works before you commit to building yours.
+          </p>
+          <div class="hero-ctas">
+            <div class="cta-row">
+              <a href="/lab-test" class="btn-primary">Run a free Lab Test &rarr;</a>
+              <a href="/lab-reports/07" class="link-tertiary">Read the latest Lab Report (No.&nbsp;07) &rarr;</a>
+            </div>
+          </div>
+          <p class="hero-footnote">No card. Email at the report gate. ~10 minutes.</p>
+        </div>
+
+        <!-- Right: lab report panel -->
+        <aside class="lab-panel" aria-label="Sample Lab Report — No. 07">
+          <div class="lab-panel-inner">
+            <div class="lab-panel-header">Lab Report &middot; No. 07 &middot; 2026-04-18</div>
+            <p class="lab-panel-title">&ldquo;Email marketing for B2B SaaS founders, sub-1k subscribers&rdquo;</p>
+            <div class="lab-data-row">
+              <span class="lab-data-label">Visitors</span>
+              <span class="lab-data-value">312</span>
+            </div>
+            <div class="lab-data-row">
+              <span class="lab-data-label">Waitlist</span>
+              <span class="lab-data-value">14</span>
+            </div>
+            <div class="lab-data-row">
+              <span class="lab-data-label">Pre-orders @ $97</span>
+              <span class="lab-data-value">3</span>
+            </div>
+            <div class="verdict-pill" role="status">
+              <span class="verdict-dot" aria-hidden="true"></span>
+              Verdict &mdash; Validated
+            </div>
+            <div class="lab-panel-footer">Full methodology &middot; courselab.io/methodology</div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ─── SECTION 2 — PROBLEM ───────────────────────────────── -->
+    <section id="problem" aria-labelledby="problem-heading">
+      <div class="container-prose">
+        <div class="prose-block">
+          <span class="eyebrow">§ 01 &middot; The Problem</span>
+          <p class="serif-para" id="problem-heading">
+            Most course creators build first and validate later. By the time the launch goes quiet, they&rsquo;ve spent 100&ndash;300 hours on something nobody bought. The mistake isn&rsquo;t the course. It&rsquo;s the order.
+          </p>
+          <div class="data-fragment">
+            <p>Reported failure rate &mdash; first course launches<br />Source: creator-economy survey, n=1,200</p>
+            <span class="data-number">~62%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 3 — METHOD ────────────────────────────────── -->
+    <section id="method" aria-labelledby="method-heading">
+      <div class="container-prose">
+        <span class="eyebrow">§ 02 &middot; The Method</span>
+        <p class="serif-intro" id="method-heading">
+          A Lab Test runs a structured demand and positioning analysis on a single course concept. You give us three things. We return a Lab Report.
+        </p>
+        <div class="method-grid">
+          <div class="method-col">
+            <div class="method-col-label">Input</div>
+            <div class="input-item">
+              <div class="input-item-key">Course concept</div>
+              <div class="input-item-value">Email marketing for B2B SaaS founders with under 1k subs.</div>
+            </div>
+            <div class="input-item">
+              <div class="input-item-key">Target audience</div>
+              <div class="input-item-value">Solo founders, technical, no marketing hire.</div>
+            </div>
+            <div class="input-item">
+              <div class="input-item-key">Outcome promised</div>
+              <div class="input-item-value">Send a campaign that produces 3+ booked calls in 14 days.</div>
+            </div>
+          </div>
+          <div class="method-col">
+            <div class="method-col-label">Output &mdash; The Lab Report</div>
+            <div class="output-table" role="table" aria-label="Lab Report sections">
+              <div class="output-row" role="row">
+                <span class="output-num" role="cell">1</span>
+                <div role="cell">
+                  <div class="output-title">Verdict</div>
+                  <div class="output-desc">Validate further &middot; Consider not building &middot; Pivot the angle</div>
+                </div>
+              </div>
+              <div class="output-row" role="row">
+                <span class="output-num" role="cell">2</span>
+                <div role="cell">
+                  <div class="output-title">Demand signals</div>
+                  <div class="output-desc">Search volume, course count, public discussion, free-content saturation</div>
+                </div>
+              </div>
+              <div class="output-row" role="row">
+                <span class="output-num" role="cell">3</span>
+                <div role="cell">
+                  <div class="output-title">Positioning</div>
+                  <div class="output-desc">Top competitors named, whitespace identified, specificity score</div>
+                </div>
+              </div>
+              <div class="output-row" role="row">
+                <span class="output-num" role="cell">4</span>
+                <div role="cell">
+                  <div class="output-title">Suggested next moves</div>
+                  <div class="output-desc">A specific pre-sale experiment you can run this week</div>
+                </div>
+              </div>
+              <div class="output-row" role="row">
+                <span class="output-num" role="cell">5</span>
+                <div role="cell">
+                  <div class="output-title">Lab notes</div>
+                  <div class="output-desc">How the verdict was reached. What this test does <em>not</em> cover.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 4 — LAB REPORT EXCERPT ───────────────────── -->
+    <section id="excerpt" aria-labelledby="excerpt-heading">
+      <div class="container-prose">
+        <span class="eyebrow">§ 03 &middot; From the Lab</span>
+        <p class="serif-intro" id="excerpt-heading">
+          Here&rsquo;s a recent one, in full. We publish every Lab Report &mdash; including the ones whose verdict was &ldquo;don&rsquo;t build.&rdquo;
+        </p>
+      </div>
+
+      <div class="container-prose">
+        <article class="report-page" aria-label="Lab Report No. 01 — full excerpt">
+          <header class="report-header-strip">
+            <span>Lab Report &middot; No. 01</span>
+            <span>2026-04-18</span>
+          </header>
+
+          <h2 class="report-title">
+            &ldquo;Email marketing for B2B SaaS founders, sub-1k subscribers&rdquo;
+          </h2>
+
+          <p class="report-verdict" aria-label="Verdict: Validated">Validated.</p>
+
+          <div class="report-data-table" role="table" aria-label="Lab Report data">
+            <div class="report-data-row header-row" role="row">
+              <span role="columnheader">Metric</span>
+              <span role="columnheader" style="text-align:right;">Result</span>
+              <span role="columnheader" style="text-align:right;">Benchmark</span>
+            </div>
+            <div class="report-data-row" role="row">
+              <span class="metric" role="cell">Unique visitors (14-day window)</span>
+              <span class="value" role="cell">312</span>
+              <span class="note" role="cell">&mdash;</span>
+            </div>
+            <div class="report-data-row" role="row">
+              <span class="metric" role="cell">Waitlist sign-ups</span>
+              <span class="value" role="cell">14</span>
+              <span class="note" role="cell">4.5% conversion</span>
+            </div>
+            <div class="report-data-row" role="row">
+              <span class="metric" role="cell">Pre-orders @ $97</span>
+              <span class="value" role="cell">3</span>
+              <span class="note" role="cell">21% of waitlist</span>
+            </div>
+            <div class="report-data-row" role="row">
+              <span class="metric" role="cell">Competing free content (search)</span>
+              <span class="value" role="cell">Low</span>
+              <span class="note" role="cell">Favourable</span>
+            </div>
+            <div class="report-data-row" role="row">
+              <span class="metric" role="cell">Specificity score (1&ndash;5)</span>
+              <span class="value" role="cell">4.2</span>
+              <span class="note" role="cell">Above threshold</span>
+            </div>
+          </div>
+
+          <div class="report-lab-notes">
+            <div class="report-lab-notes-label">Lab notes</div>
+            <p>
+              Demand signals were positive across all three channels tested. The sub-1k constraint on the audience specification was the primary driver of conversion &mdash; broad &ldquo;email marketing for SaaS&rdquo; positioning would have competed with Mailchimp and ConvertKit documentation. The pre-order rate of 21% from waitlist is above the 15% threshold we use as a validation signal. Recommended next move: run a paid waitlist with a $47 early-access price and measure drop-off. This test does not cover pricing elasticity above $97, or whether the promised outcome is achievable for the stated audience.
+            </p>
+          </div>
+
+          <footer class="report-footer">
+            Full report &rarr; <a href="/lab/01">courselab.io/lab/01</a>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 5 — WHAT YOU RECEIVE ──────────────────────── -->
+    <section id="deliverables" aria-labelledby="deliverables-heading">
+      <div class="container-prose">
+        <span class="eyebrow">§ 04 &middot; What You Receive</span>
+        <p class="serif-intro" id="deliverables-heading">
+          Every Lab Test produces the same five-section report. Same template, every time. Familiar after the first one.
+        </p>
+        <div class="deliverables-list" role="list">
+          <div class="deliverable-row" role="listitem">
+            <span class="deliverable-num">01</span>
+            <div>
+              <div class="deliverable-title">Verdict</div>
+              <div class="deliverable-desc">A single conclusion: validate further, consider not building, or pivot the angle.</div>
+            </div>
+            <span class="deliverable-tag">evidence-backed</span>
+          </div>
+          <div class="deliverable-row" role="listitem">
+            <span class="deliverable-num">02</span>
+            <div>
+              <div class="deliverable-title">Demand signals</div>
+              <div class="deliverable-desc">Search volume, course count, public discussion, free-content saturation.</div>
+            </div>
+            <span class="deliverable-tag">data-driven</span>
+          </div>
+          <div class="deliverable-row" role="listitem">
+            <span class="deliverable-num">03</span>
+            <div>
+              <div class="deliverable-title">Positioning analysis</div>
+              <div class="deliverable-desc">Top competitors named, whitespace identified, your specificity score.</div>
+            </div>
+            <span class="deliverable-tag">named sources</span>
+          </div>
+          <div class="deliverable-row" role="listitem">
+            <span class="deliverable-num">04</span>
+            <div>
+              <div class="deliverable-title">Suggested next moves</div>
+              <div class="deliverable-desc">A specific pre-sale experiment you can run this week, not a list of platitudes.</div>
+            </div>
+            <span class="deliverable-tag">actionable</span>
+          </div>
+          <div class="deliverable-row" role="listitem">
+            <span class="deliverable-num">05</span>
+            <div>
+              <div class="deliverable-title">Lab notes</div>
+              <div class="deliverable-desc">How the verdict was reached and what this test does not cover.</div>
+            </div>
+            <span class="deliverable-tag">transparent</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 6 — PRICING ───────────────────────────────── -->
+    <section id="pricing" aria-labelledby="pricing-heading">
+      <div class="container-prose">
+        <span class="eyebrow">§ 05 &middot; Pricing</span>
+        <p class="serif-intro" id="pricing-heading">
+          Three ways in. Most people start with a free Lab Test.
+        </p>
+        <div class="pricing-grid" role="list">
+
+          <div class="pricing-col" role="listitem">
+            <div class="pricing-tier-label">Free</div>
+            <div class="pricing-name">Open Lab Test</div>
+            <div class="pricing-price">$0</div>
+            <ul class="pricing-features">
+              <li>One Lab Test per idea</li>
+              <li>Automated demand signal scan</li>
+              <li>Verdict + one-line summary</li>
+              <li>Email required to unlock full report</li>
+            </ul>
+            <a href="/lab-test" class="btn-ghost">Run a free Lab Test &rarr;</a>
+          </div>
+
+          <div class="pricing-col" role="listitem">
+            <div class="pricing-tier-label">Paid</div>
+            <div class="pricing-name">Full Lab Report</div>
+            <div class="pricing-price">$29</div>
+            <ul class="pricing-features">
+              <li>Full five-section Lab Report</li>
+              <li>Named competitor analysis</li>
+              <li>Specificity score + whitespace map</li>
+              <li>Specific pre-sale experiment to run</li>
+            </ul>
+            <a href="/lab-test/paid" class="btn-primary">Get the Full Report &rarr;</a>
+          </div>
+
+          <div class="pricing-col" role="listitem">
+            <div class="pricing-tier-label">Subscription</div>
+            <div class="pricing-name">Unlimited Tests</div>
+            <div class="pricing-price">$19<sub>/mo</sub></div>
+            <ul class="pricing-features">
+              <li>Unlimited Lab Tests</li>
+              <li>All Full Lab Report sections</li>
+              <li>Early access to Lab Pulse</li>
+              <li>Cancel anytime</li>
+            </ul>
+            <a href="/subscribe" class="btn-ghost">Start a subscription &rarr;</a>
+          </div>
+
+        </div>
+        <p class="pricing-note">14-day refund &middot; No card to start a Lab Test</p>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 7 — WHO IT'S FOR ──────────────────────────── -->
+    <section id="who" aria-labelledby="who-heading">
+      <div class="container-prose">
+        <span class="eyebrow" id="who-heading">§ Built for &amp; not for</span>
+        <div class="grid-halves">
+          <div class="half">
+            <div class="half-label">Built for</div>
+            <div class="audience-item">First-launch course creators</div>
+            <div class="audience-item">500&ndash;3,000 followers</div>
+            <div class="audience-item">USD 0&ndash;30k tier</div>
+            <div class="audience-item">Has felt the burn of doing things half-right</div>
+          </div>
+          <div class="half">
+            <div class="half-label">Not for</div>
+            <div class="audience-item">Hobbyists with no audience</div>
+            <div class="audience-item">Pre-revenue, under 100 followers</div>
+            <div class="audience-item">Established creators with USD 100k+ courses</div>
+            <div class="audience-item">Enterprise L&amp;D</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 8 — FOUNDER ───────────────────────────────── -->
+    <section id="founder" aria-labelledby="founder-heading">
+      <div class="container-prose">
+        <span class="eyebrow" id="founder-heading">§ 06 &middot; Who runs the Lab</span>
+        <div class="founder-aside">
+          <p class="founder-para">
+            I&rsquo;m based in Singapore. Before this, I shipped two AI products and watched both fail at validation &mdash; once because nobody wanted what it did, once because the people who wanted it wouldn&rsquo;t pay for it. That&rsquo;s the source material for the methodology this Lab uses. &mdash; <span class="founder-sig">The Founder</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 9 — FINAL CTA ─────────────────────────────── -->
+    <section id="final-cta" aria-labelledby="final-cta-heading">
+      <div class="container-prose">
+        <p class="cta-line" id="final-cta-heading">
+          <em>Stop guessing. Start measuring.</em>
+        </p>
+        <a href="/lab-test" class="btn-primary">Run a free Lab Test &rarr;</a>
+        <p class="cta-footnote">Takes ~10 minutes &middot; Email at the report gate &middot; No card</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer id="footer" aria-label="Site footer">
+    <div class="container-prose">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-col-label">The Lab</div>
+          <ul class="footer-links">
+            <li><a href="/lab-reports">Lab Reports</a></li>
+            <li><a href="/methodology">Methodology</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-label">Tools</div>
+          <ul class="footer-links">
+            <li><a href="/lab-test">Lab Test</a></li>
+            <li><span style="font-family:var(--mono);font-size:11px;color:var(--charcoal-2);">Lab Pulse<span class="soon">Soon</span></span></li>
+            <li><span style="font-family:var(--mono);font-size:11px;color:var(--charcoal-2);">Lab Co-Pilot<span class="soon">Soon</span></span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-label">Legal</div>
+          <ul class="footer-links">
+            <li><a href="/terms">Terms</a></li>
+            <li><a href="/privacy">Privacy</a></li>
+            <li><a href="/refund">Refund policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 The Course Lab &middot; Singapore &middot; v1.0.0
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
